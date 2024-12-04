@@ -17,7 +17,7 @@ from logging import DEBUG, debug, getLogger
 getLogger().setLevel(DEBUG)
 
 
-def parse_field_info():
+def parse_field_info() -> tuple[int, int]:
     """
     Parse the info about the field.
 
@@ -30,9 +30,12 @@ def parse_field_info():
     """
     l = input()
     debug(f"Description of the field: {l}")
+    tmp = l.strip().strip(":").split()
+    height = int(tmp[1])
+    width = int(tmp[2])
+    return height, width
 
-
-def parse_field(player: int):
+def parse_field(player: int, size: tuple[int, int]):
     """
     Parse the field.
 
@@ -72,7 +75,7 @@ def parse_field(player: int):
     :param player int: Represents whether we're the first or second player
     """
     move = None
-    for i in range(16):
+    for i in range(size[0]+1):
         l = input()
         debug(f"Field: {l}")
         if move is None:
@@ -80,6 +83,7 @@ def parse_field(player: int):
             if c != -1:
                 move = i - 1, c - 4
     assert move is not None
+    debug(f"Move: {move}")
     return move
 
 
@@ -112,8 +116,8 @@ def step(player: int):
     :param player int: Represents whether we're the first or second player
     """
     move = None
-    parse_field_info()
-    move = parse_field(player)
+    size = parse_field_info()
+    move = parse_field(player, size)
     parse_figure()
     return move
 
