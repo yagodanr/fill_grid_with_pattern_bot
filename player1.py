@@ -35,7 +35,7 @@ def parse_field_info() -> tuple[int, int]:
     width = int(tmp[2])
     return height, width
 
-def parse_field(player: int, size: tuple[int, int]):
+def parse_field(player: int, size: tuple[int, int]) -> tuple[int, int]:
     """
     Parse the field.
 
@@ -87,7 +87,7 @@ def parse_field(player: int, size: tuple[int, int]):
     return move
 
 
-def parse_figure():
+def parse_figure() -> tuple[tuple[int, int], list[list[int]]]:
     """
     Parse the figure.
 
@@ -103,10 +103,42 @@ def parse_figure():
     """
     l = input()
     debug(f"Piece: {l}")
-    height = int(l.split()[1])
+    l = l.strip().strip(":").split()
+    *_, height, width = l
+    height = int(height)
+    width = int(width)
+    figure = []
+    #smallest_sizes is used to cut unnecessary characters before the actual figure and after it
+    smallest_sizes = []
     for _ in range(height):
         l = input()
         debug(f"Piece: {l}")
+        start = None
+        end = None
+        figure.append([])
+        for i, el in enumerate(l):
+            if el == "*":
+                if start is None:
+                    start = i
+                end = i
+                figure[-1].append(1)
+            else:
+                figure[-1].append(0)
+        if start is not None:
+            smallest_sizes.append((start, end))
+    smallest_size = min(smallest_sizes, key=lambda x: x[0] if x[0] is not None else height)[0], \
+                    max(smallest_sizes, key=lambda x: x[1] if x[1] is not None else width)[1]
+    debug(f"parse_figure -> cut indexes: {smallest_size}")
+    smallest_figure = [line[smallest_size[0]:smallest_size[1]+1] for line in figure]
+    l, r = 0, height-1
+    while not any(smallest_figure[l]):
+        l += 1
+    while not any(smallest_figure[r]):
+        r -= 1
+    smallest_figure = smallest_figure[l:r+1]
+    debug(f"parse_figure -> figure: {smallest_figure}")
+    debug(f"parse_figure -> returns: {(len(smallest_figure), r-l+1), smallest_figure}")
+    return ((len(smallest_figure), r-l+1), smallest_figure)
 
 
 def step(player: int):
