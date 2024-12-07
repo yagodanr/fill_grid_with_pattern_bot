@@ -108,37 +108,17 @@ def parse_figure() -> tuple[tuple[int, int], list[list[int]]]:
     height = int(height)
     width = int(width)
     figure = []
-    #smallest_sizes is used to cut unnecessary characters before the actual figure and after it
-    smallest_sizes = []
     for _ in range(height):
         l = input()
         debug(f"Piece: {l}")
-        start = None
-        end = None
         figure.append([])
-        for i, el in enumerate(l):
+        for el in l:
             if el == "*":
-                if start is None:
-                    start = i
-                end = i
                 figure[-1].append(1)
             else:
                 figure[-1].append(0)
-        if start is not None:
-            smallest_sizes.append((start, end))
-    smallest_size = min(smallest_sizes, key=lambda x: x[0] if x[0] is not None else height)[0], \
-                    max(smallest_sizes, key=lambda x: x[1] if x[1] is not None else width)[1]
-    debug(f"parse_figure -> cut indexes: {smallest_size}")
-    smallest_figure = [line[smallest_size[0]:smallest_size[1]+1] for line in figure]
-    l, r = 0, height-1
-    while not any(smallest_figure[l]):
-        l += 1
-    while not any(smallest_figure[r]):
-        r -= 1
-    smallest_figure = smallest_figure[l:r+1]
-    debug(f"parse_figure -> figure: {smallest_figure}")
-    debug(f"parse_figure -> returns: {(len(smallest_figure), r-l+1), smallest_figure}")
-    return ((len(smallest_figure), r-l+1), smallest_figure)
+    debug(f"parse_figure -> returns: {(height, width), figure}")
+    return (height, width), figure
 
 
 def step(player: int):
@@ -150,7 +130,7 @@ def step(player: int):
     move = None
     size = parse_field_info()
     move = parse_field(player, size)
-    parse_figure()
+    figure_size, figure = parse_figure()
     return move
 
 
