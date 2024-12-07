@@ -35,7 +35,7 @@ def parse_field_info() -> tuple[int, int]:
     width = int(tmp[2])
     return height, width
 
-def parse_field(player: int, size: tuple[int, int]) -> tuple[int, int]:
+def parse_field(size: tuple[int, int]) -> list[str]:
     """
     Parse the field.
 
@@ -50,7 +50,7 @@ def parse_field(player: int, size: tuple[int, int]) -> tuple[int, int]:
     empty cells), or it can be connected with multiple cells of our territory.
     That's definitely what you should address.
 
-    Also, it might be useful to distinguish between lowecase (the most recent piece)
+    Also, it might be useful to distinguish between lowercase (the most recent piece)
     and uppercase letters to determine where the enemy is moving etc.
 
     The input may look like this:
@@ -72,19 +72,18 @@ def parse_field(player: int, size: tuple[int, int]) -> tuple[int, int]:
     013 .................
     014 .................
 
-    :param player int: Represents whether we're the first or second player
     """
-    move = None
-    for i in range(size[0]+1):
+    field = [[0]*size[1] for _ in range(size[0])]
+
+    #cuts the first row of column numbers
+    l = input()
+    debug(f"Field: {l}")
+    for i in range(size[0]):
         l = input()
         debug(f"Field: {l}")
-        if move is None:
-            c = l.lower().find("o" if player == 1 else "x")
-            if c != -1:
-                move = i - 1, c - 4
-    assert move is not None
-    debug(f"Move: {move}")
-    return move
+        field[i] = l.split()[1]
+    debug(f"parse_field -> {field}")
+    return field
 
 
 def parse_figure() -> tuple[tuple[int, int], list[list[int]]]:
@@ -129,7 +128,7 @@ def step(player: int):
     """
     move = None
     size = parse_field_info()
-    move = parse_field(player, size)
+    field = parse_field(size)
     figure_size, figure = parse_figure()
     return move
 
