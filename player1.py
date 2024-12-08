@@ -82,7 +82,7 @@ def parse_field(size: tuple[int, int]) -> list[str]:
         l = input()
         debug(f"Field: {l}")
         field[i] = l.split()[1]
-    debug(f"parse_field -> {field}")
+    # debug(f"parse_field -> {field}")
     return field
 
 
@@ -116,7 +116,7 @@ def parse_figure() -> tuple[tuple[int, int], list[list[int]]]:
                 figure[-1].append(1)
             else:
                 figure[-1].append(0)
-    debug(f"parse_figure -> returns: {(height, width), figure}")
+    # debug(f"parse_figure -> returns: {(height, width), figure}")
     return (height, width), figure
 
 
