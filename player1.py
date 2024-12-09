@@ -169,12 +169,14 @@ def make_move(field_size: tuple[int, int], field: list[str],
         debug(f"moves -> {moves}")
         return moves
 
-    try:
-        move = generate_moves()[-1]
-    except IndexError:
-        move = None
-    debug(f"make_move -> {move}")
-    return move
+
+    moves = generate_moves()
+    if len(moves) == 0:
+        return None
+    debug(f"make_move -> {moves}")
+
+    center = field_size[0]//2, field_size[1]//2
+    return min(moves, key=lambda x: abs(center[0]-x[0])+abs(center[1]-x[1]))
 
 
 def step(player: int):
