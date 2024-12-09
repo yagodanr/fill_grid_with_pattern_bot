@@ -107,12 +107,21 @@ def parse_figure() -> tuple[tuple[int, int], list[list[int]]]:
     height = int(height)
     width = int(width)
     figure = []
+    right_end = 0
     for _ in range(height):
         l = input()
         debug(f"Piece: {l}")
         figure.append(l)
-    # debug(f"parse_figure -> returns: {(height, width), figure}")
-    return (height, width), figure
+        right_end = max(right_end, l.rfind("*"))
+    width = right_end + 1
+    for bottom in range(height-1, 0-1, -1):
+        if figure[bottom].strip(".") != "":
+            break
+    figure = figure[:bottom+1]
+    figure = [line[:right_end+1] for line in figure]
+
+    debug(f"parse_figure -> returns: {(len(figure), width), figure}")
+    return (len(figure), width), figure
 
 def make_move(field_size: tuple[int, int], field: list[str],
               figure_size: tuple[int, int], figure: list[str],
