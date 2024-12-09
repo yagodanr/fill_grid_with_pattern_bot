@@ -126,6 +126,12 @@ def parse_figure() -> tuple[tuple[int, int], list[list[int]]]:
 def make_move(field_size: tuple[int, int], field: list[str],
               figure_size: tuple[int, int], figure: list[str],
               player: int) -> tuple[int, int]:
+    """
+    takes a lot of parameters and about game state and returns move for given player
+
+    Returns:
+        tuple[int, int]: move
+    """
 
     player_symbol = "o" if player == 1 else "x"
     opponent_symbol = "x" if player == 1 else "o"
