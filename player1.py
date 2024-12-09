@@ -120,7 +120,7 @@ def parse_figure() -> tuple[tuple[int, int], list[list[int]]]:
     figure = figure[:bottom+1]
     figure = [line[:right_end+1] for line in figure]
 
-    debug(f"parse_figure -> returns: {(len(figure), width), figure}")
+    # debug(f"parse_figure -> returns: {(len(figure), width), figure}")
     return (len(figure), width), figure
 
 def make_move(field_size: tuple[int, int], field: list[str],
@@ -205,6 +205,9 @@ def play(player: int):
     """
     while True:
         move = step(player)
+        if move is None:
+            print(None)
+            break
         print(*move)
 
 
