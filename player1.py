@@ -110,14 +110,62 @@ def parse_figure() -> tuple[tuple[int, int], list[list[int]]]:
     for _ in range(height):
         l = input()
         debug(f"Piece: {l}")
-        figure.append([])
-        for el in l:
-            if el == "*":
-                figure[-1].append(1)
-            else:
-                figure[-1].append(0)
+        figure.append(l)
     # debug(f"parse_figure -> returns: {(height, width), figure}")
     return (height, width), figure
+
+def make_move(field_size: tuple[int, int], field: list[str],
+              figure_size: tuple[int, int], figure: list[str],
+              player: int) -> tuple[int, int]:
+
+    player_symbol = "o" if player == 1 else "x"
+
+    def generate_moves() -> list[tuple[int, int]]:
+        moves = []
+        for i in range(field_size[0]-figure_size[0]+1):
+            for j in range(field_size[1]-figure_size[1]+1):
+                overlap = 0
+                # debug(f"=====i, j -> {i, j}=======")
+                # if i > 5 or j > 5:
+                #     break
+
+                for f_i in range(figure_size[0]):
+                    for f_j in range(figure_size[1]):
+                        x, y = i + f_i, j + f_j
+                        el = None
+                        try:
+                            el = field[x][y]
+                        except IndexError:
+                            break
+                        el = el.lower()
+                        # debug(f"x, y -> {x, y}")
+
+                        if figure[f_i][f_j] == ".":
+                            continue
+
+                        if el == player_symbol:
+                            overlap += 1
+                        elif el != '.':
+                            break
+
+                        if overlap > 1:
+                            break
+
+                    else:
+                        continue
+                    break
+                else:
+                    if overlap == 1:
+                        moves.append((i, j))
+        debug(f"moves -> {moves}")
+        return moves
+
+    try:
+        move = generate_moves()[-1]
+    except IndexError:
+        move = None
+    debug(f"make_move -> {move}")
+    return move
 
 
 def step(player: int):
@@ -126,10 +174,15 @@ def step(player: int):
 
     :param player int: Represents whether we're the first or second player
     """
-    move = None
     size = parse_field_info()
     field = parse_field(size)
     figure_size, figure = parse_figure()
+
+
+    move = make_move(size, field, figure_size, figure, player)
+
+
+
     return move
 
 
