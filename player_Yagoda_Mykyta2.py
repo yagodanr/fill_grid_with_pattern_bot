@@ -180,9 +180,11 @@ def make_move(field_size: tuple[int, int], field: list[str],
     def principle(coord):
         x, y = coord
         right, bottom = x + figure_size[0], y + figure_size[1]
+        center = field_size[0]//2, field_size[1]//2
+        dist_center = abs(center[0]-x)+abs(center[1]-y)
 
 
-        return min([min(abs(x-i), abs(right-i))+min(abs(y-j), abs(bottom-j))
+        return min([dist_center + min(abs(x-i), abs(right-i))+min(abs(y-j), abs(bottom-j))
                 for i in range(field_size[0])
                 for j in range(field_size[1]) if field[i][j].lower() == opponent_symbol])
     return min(moves, key=principle)
